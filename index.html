@@ -1,129 +1,74 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Bazar de Nobsy - TEST</title>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bazar de Nobsy - TEST FINAL</title>
 <style>
 body{font-family:sans-serif;background:#f6f6f6;margin:0;padding:15px}
 .card{background:white;padding:20px;border-radius:15px;max-width:500px;margin:auto;box-shadow:0 2px 10px rgba(0,0,0,.1)}
 input,select,textarea{width:100%;padding:12px;margin:8px 0;border:1px solid #ddd;border-radius:8px;box-sizing:border-box}
 button{width:100%;padding:14px;background:black;color:white;border:none;border-radius:8px;font-weight:bold;cursor:pointer}
-button:disabled{background:grey}
 #preview{width:100%;max-height:200px;object-fit:cover;border-radius:10px;display:none;margin-top:10px}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:30px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:20px;max-width:500px;margin:auto}
 .prod{background:white;border-radius:12px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.08)}
-.prod img{width:100%;height:150px;object-fit:cover}
-.prod.info{padding:10px}
+.prod img{width:100%;height:150px;object-fit:cover}.info{padding:10px}
 </style>
 </head>
 <body>
-
 <div class="card">
-<h2>Ajouter un produit (TEST)</h2>
-<input id="nom" placeholder="Nom du produit ex: Jawbreaker">
-<input id="prix" placeholder="Prix $ ex: 20" type="number">
-<select id="cat">
-<option>Sucette</option>
-<option>Bonbon</option>
-<option>Chocolat</option>
-<option>Autre</option>
-</select>
-<textarea id="desc" placeholder="Description"></textarea>
-<input id="file" type="file" accept="image/*">
-<img id="preview">
+<h2>Ajouter un produit (TEST FINAL)</h2>
+<input id="nom" placeholder="Nom du produit">
+<input id="prix" placeholder="Prix $ ex: 25" type="number">
+<select id="cat"><option>Chocolat</option><option>Sucette</option><option>Bonbon</option><option>Autre</option></select>
+<textarea id="desc" placeholder="Description ex: Ggg"></textarea>
+<input id="file" type="file" accept="image/*"><img id="preview">
 <button id="btn">🚀 Publier - Visible par tous</button>
-<p id="status"></p>
+<p id="status" style="text-align:center"></p>
 </div>
-
 <h3 style="text-align:center;margin-top:30px">Produits en ligne</h3>
-<div id="grid" class="grid"></div>
+<div id="grid" class="grid">Chargement...</div>
 
 <script>
 const IMGBB_KEY = "cd9e9cede23ed44cd21cfd15dd2d8252";
 const BIN_ID = "6ac004c1ffd5d160534731b8";
-const MASTER_KEY = "$2a$10$Sd1xnH37QZJCb171He7tWuKaSPgVRMmoaigG3d2uCv/S1SyqEUWmW";
+const MASTER_KEY = "$2a$10$Sd1xnH37QZJCb17iHe7tWuKaSPgVRMmoaigG3d2uCv/SlSyqEUWmW";
 
-const fileInput = document.getElementById('file');
-const preview = document.getElementById('preview');
-fileInput.onchange = () => {
-  const f = fileInput.files[0];
-  if(f){ preview.src = URL.createObjectURL(f); preview.style.display='block'; }
+const fileInput=document.getElementById('file'),preview=document.getElementById('preview');
+fileInput.onchange=()=>{const f=fileInput.files[0]; if(f){preview.src=URL.createObjectURL(f); preview.style.display='block';}}
+
+async function getProduits(){
+  const res=await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`,{headers:{"X-Master-Key":MASTER_KEY}});
+  const json=await res.json();
+  if(json.record?.produits) return json.record.produits;
+  if(Array.isArray(json.record)) return json.record;
+  if(json.produits) return json.produits;
+  return [];
 }
-
-async function charger() {
-  const grid = document.getElementById('grid');
-  grid.innerHTML = "Chargement...";
+async function charger(){
+  const grid=document.getElementById('grid');
   try{
-    const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`,{
-      headers:{"X-Master-Key":MASTER_KEY}
+    const produits=await getProduits();
+    grid.innerHTML=produits.length? "": "Aucun produit, sois le premier!";
+    produits.slice().reverse().forEach(p=>{
+      grid.innerHTML+=`<div class="prod"><img src="${p.photo}"><div class="info"><b>${p.nom}</b><br><small>${p.categorie}</small><br><b style="color:green">${p.prix} $</b><br><small>${p.description||''}</small></div></div>`;
     });
-    const json = await res.json();
-    const produits = json.record.produits || [];
-    grid.innerHTML = "";
-    produits.reverse().forEach(p=>{
-      grid.innerHTML += `
-      <div class="prod">
-        <img src="${p.photo}">
-        <div class="info">
-          <b>${p.nom}</b><br>
-          <small>${p.categorie}</small><br>
-          <span style="color:green;font-weight:bold">${p.prix} $</span><br>
-          <small>${p.description||''}</small>
-        </div>
-      </div>`;
-    });
-  }catch(e){ grid.innerHTML="Erreur chargement"; }
+  }catch(e){grid.innerHTML="Erreur: "+e.message;}
 }
-
-document.getElementById('btn').onclick = async () => {
-  const nom = document.getElementById('nom').value;
-  const prix = document.getElementById('prix').value;
-  const cat = document.getElementById('cat').value;
-  const desc = document.getElementById('desc').value;
-  const file = document.getElementById('file').files[0];
-  const btn = document.getElementById('btn');
-  const status = document.getElementById('status');
-
-  if(!nom||!prix||!file) return alert("Remplis nom, prix et photo");
-
-  btn.disabled=true; btn.innerText="⏳ Envoi photo..."; status.innerText="Upload vers ImgBB...";
-
+document.getElementById('btn').onclick=async()=>{
+  const nom=document.getElementById('nom').value.trim(),prix=document.getElementById('prix').value.trim(),cat=document.getElementById('cat').value,desc=document.getElementById('desc').value.trim(),file=document.getElementById('file').files[0],btn=document.getElementById('btn'),status=document.getElementById('status');
+  if(!nom||!prix||!file) return alert("Remplis nom, prix et photo!");
+  btn.disabled=true; btn.innerText="⏳ Envoi photo..."; status.innerText="Upload ImgBB...";
   try{
-    // 1. Upload ImgBB
-    const fd = new FormData(); fd.append("image", file);
-    const r1 = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_KEY}`,{method:"POST",body:fd});
-    const j1 = await r1.json();
-    if(!j1.success) throw new Error("ImgBB échoué");
-    const photoUrl = j1.data.display_url;
-
-    status.innerText="Photo OK, sauvegarde..."; btn.innerText="⏳ Sauvegarde...";
-
-    // 2. Get old
-    const r2 = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`,{headers:{"X-Master-Key":MASTER_KEY}});
-    const j2 = await r2.json();
-    const old = j2.record.produits||[];
-
-    // 3. Put new
-    const nouveau = {nom,prix,categorie:cat,description:desc,photo:photoUrl,id:Date.now()};
-    const newData = {produits:[...old,nouveau]};
-
-    await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`,{
-      method:"PUT",
-      headers:{"X-Master-Key":MASTER_KEY,"Content-Type":"application/json"},
-      body: JSON.stringify(newData)
-    });
-
-    status.innerText="✅ Publié!";
-    btn.disabled=false; btn.innerText="🚀 Publier - Visible par tous";
-    document.getElementById('nom').value=""; document.getElementById('prix').value=""; document.getElementById('desc').value="";
-    charger();
-
-  }catch(e){
-    alert(e.message); btn.disabled=false; btn.innerText="🚀 Publier"; status.innerText="";
-  }
+    const fd=new FormData(); fd.append("image",file);
+    const r1=await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_KEY}`,{method:"POST",body:fd});
+    const j1=await r1.json(); const photoUrl=j1.data.display_url;
+    status.innerText="Photo OK, sauvegarde pour tous..."; btn.innerText="⏳ Sauvegarde...";
+    const old=await getProduits();
+    const newData={produits:[...old,{nom,prix,categorie:cat,description:desc,photo:photoUrl,id:Date.now()}]};
+    await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`,{method:"PUT",headers:{"X-Master-Key":MASTER_KEY,"Content-Type":"application/json"},body:JSON.stringify(newData)});
+    status.innerText="✅ Publié!"; btn.disabled=false; btn.innerText="🚀 Publier"; charger();
+  }catch(e){alert(e.message); btn.disabled=false;}
 };
-
 charger();
 </script>
 </body>
