@@ -1,96 +1,119 @@
 <!DOCTYPE html>
 <html lang="fr-CA">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Le bazar de Nobsy</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<div class="category-ribbon-container">
-<div class="category-ribbon"><div class="ribbon-track">
-<button class="ribbon-item" onclick="filterByCategory('pop')">🧸 Pop</button>
-<button class="ribbon-item" onclick="filterByCategory('jeuxvideo')">🎮 Jeux Vidéo</button>
-<button class="ribbon-item" onclick="filterByCategory('skylander')">🌀 Skylanders</button>
-<button class="ribbon-item" onclick="filterByCategory('livre')">📚 Livres</button>
-<button class="ribbon-item" onclick="filterByCategory('film')">🎬 Films</button>
-</div></div>
-</div>
-
 <nav class="navbar">
 <div class="logo">LE BAZAR DE NOBSY</div>
 <div class="search-box"><input type="search" id="searchProduct" placeholder="🔍 Rechercher" oninput="searchProducts()"></div>
 <div class="hamburger" id="hamburgerBtn"><span></span><span></span><span></span></div>
 <ul class="nav-menu" id="navMenu">
-<li><a href="#accueil">Accueil</a></li><li><a href="#produits">Produits</a></li><li><a href="#catalogue">Catalogue</a></li>
+<li><a href="#accueil" onclick="showAllCategories()">Accueil</a></li>
+<li><a href="#produits" onclick="showAllCategories()">Produits</a></li>
+<li><a href="#catalogue">Catalogue</a></li>
 </ul>
 </nav>
 
-<section id="admin" style="display:none; background:#fff; padding:20px; margin:20px; border-radius:15px; border:1px solid #eee;">
-<h2>Ajouter un produit</h2>
+<div class="category-ribbon-container" style="margin-top:70px;">
+<div class="category-ribbon"><div class="ribbon-track" style="display:flex;gap:10px;overflow-x:auto;padding:10px;">
+<button class="ribbon-item" onclick="filterByCategory('pop')">🧸 Pop</button>
+<button class="ribbon-item" onclick="filterByCategory('jeuxvideo')">🎮 Jeux Vidéo</button>
+<button class="ribbon-item" onclick="filterByCategory('skylander')">🌀 Skylanders</button>
+<button class="ribbon-item" onclick="filterByCategory('livre')">📚 Livres</button>
+<button class="ribbon-item" onclick="filterByCategory('film')">🎬 Films</button>
+<button class="ribbon-item" onclick="filterByCategory('decoration')">🖼️ Déco</button>
+</div></div>
+</div>
+
+<section id="admin" style="display:none; background:#fff; padding:20px; margin:20px; border-radius:15px; border:1px solid #eee; max-width:600px; margin-left:auto; margin-right:auto;">
+<h2 style="color:#0084ff;">Ajouter un produit</h2>
 <form id="formAjoutProduit">
-<input type="text" id="nomProduit" placeholder="Nom" required style="width:100%;padding:12px;margin:5px 0;border-radius:10px;border:1px solid #ddd;">
-<textarea id="descProduit" placeholder="Description" style="width:100%;padding:12px;margin:5px 0;border-radius:10px;border:1px solid #ddd;"></textarea>
-<input type="number" id="prixProduit" placeholder="Prix $" step="0.01" required style="width:100%;padding:12px;margin:5px 0;border-radius:10px;border:1px solid #ddd;">
-<input type="file" id="imageProduit" accept="image/*" required>
-<div id="preview-container" style="display:none"><img id="imagePreview" style="max-width:100px;"></div>
-<select id="categorieProduit" required style="width:100%;padding:12px;margin:5px 0;border-radius:10px;border:1px solid #ddd;">
-<option value="pop">Pop</option><option value="jeuxvideo">Jeux vidéo</option><option value="skylander">Skylanders</option><option value="livre">Livres</option><option value="film">Films</option><option value="decoration">Déco</option><option value="vaisselle">Vaisselle</option><option value="bijoux">Bijoux</option><option value="jeux">Jeux</option><option value="peluche">Peluche</option><option value="vetement">Vêtement</option><option value="maquillage">Maquillage</option><option value="lumiere">Lumière</option>
+<input type="text" id="nomProduit" placeholder="Nom du produit" required style="width:100%;padding:12px;margin:6px 0;border-radius:10px;border:1px solid #ddd;">
+<textarea id="descProduit" placeholder="Description" style="width:100%;padding:12px;margin:6px 0;border-radius:10px;border:1px solid #ddd;"></textarea>
+<input type="number" id="prixProduit" placeholder="Prix $" step="0.01" required style="width:100%;padding:12px;margin:6px 0;border-radius:10px;border:1px solid #ddd;">
+<input type="file" id="imageProduit" accept="image/*" required style="margin:10px 0;">
+<div id="preview-container" style="display:none;margin:10px 0;"><img id="imagePreview" style="max-width:120px;border-radius:10px;"></div>
+<select id="categorieProduit" required style="width:100%;padding:12px;margin:6px 0;border-radius:10px;border:1px solid #ddd;">
+<option value="pop">🧸 Pop</option>
+<option value="jeuxvideo">🎮 Jeux Vidéo</option>
+<option value="skylander">🌀 Skylanders</option>
+<option value="livre">📚 Livres</option>
+<option value="film">🎬 Films</option>
+<option value="decoration">🖼️ Décoration</option>
+<option value="vaisselle">🍽️ Vaisselle</option>
+<option value="bijoux">💍 Bijoux</option>
+<option value="jeux">🧩 Casse-tête et jeux</option>
+<option value="peluche">🧸 Peluches</option>
+<option value="vetement">👕 Vêtements</option>
+<option value="maquillage">💄 Maquillage</option>
+<option value="lumiere">💡 Lumière</option>
 </select>
-<button type="submit" style="width:100%;padding:14px;background:#0084ff;color:white;border:none;border-radius:12px;font-weight:bold;">🚀 Publier</button>
+<button type="submit" id="btnPublish" style="width:100%;padding:14px;background:#0084ff;color:white;border:none;border-radius:12px;font-weight:bold;margin-top:10px;">🚀 Publier le produit</button>
 </form>
 </section>
 
 <section id="produits"><div class="container">
 <h2 id="default-title">Nos Articles</h2>
-<div id="category-back-button" style="display:none;text-align:center;"><button onclick="showAllCategories()" style="padding:10px 20px;background:white;color:#0084ff;border:1px solid #0084ff;border-radius:10px;">← Retour</button></div>
-<div id="pop"><h3>🧸 Pop</h3><div class="products-grid" id="grid-pop"></div></div>
-<div id="jeuxvideo"><h3>🎮 Jeux vidéo</h3><div class="products-grid" id="grid-jeuxvideo"></div></div>
-<div id="skylander"><h3>🌀 Skylanders</h3><div class="products-grid" id="grid-skylander"></div></div>
-<div id="livre"><h3>📚 Livres</h3><div class="products-grid" id="grid-livre"></div></div>
-<div id="film"><h3>🎬 Films</h3><div class="products-grid" id="grid-film"></div></div>
-<div id="decoration"><h3>🖼️ Déco</h3><div class="products-grid" id="grid-decoration"></div></div>
-<div id="vaisselle"><h3>🍽️ Vaisselle</h3><div class="products-grid" id="grid-vaisselle"></div></div>
-<div id="bijoux"><h3>💍 Bijoux</h3><div class="products-grid" id="grid-bijoux"></div></div>
-<div id="jeux"><h3>🧩 Casse-tête et jeux</h3><div class="products-grid" id="grid-jeux"></div></div>
-<div id="peluche"><h3>🧸 Peluches</h3><div class="products-grid" id="grid-peluche"></div></div>
-<div id="vetement"><h3>👕 Vêtements</h3><div class="products-grid" id="grid-vetement"></div></div>
-<div id="maquillage"><h3>💄 Maquillage</h3><div class="products-grid" id="grid-maquillage"></div></div>
-<div id="lumiere"><h3>💡 Lumière</h3><div class="products-grid" id="grid-lumiere"></div></div>
-<div class="catalogue-drawer" style="max-width:450px;margin:40px auto;">
-<button class="catalogue-toggle" id="btnCatalogue" style="width:100%;padding:15px;background:#0084ff;color:white;border:none;border-radius:12px;">Explorer par catégorie ▼</button>
-<div class="catalogue-content" id="catContent" style="display:none;background:white;padding:10px;margin-top:10px;border-radius:10px;">
-<a href="javascript:void(0)" onclick="filterByCategory('pop')">🧸 Pop</a> - 
-<a href="javascript:void(0)" onclick="filterByCategory('livre')">📚 Livres</a> - 
-<a href="javascript:void(0)" onclick="filterByCategory('skylander')">🌀 Skylanders</a>
+<div id="category-back-button" style="display:none;text-align:center;margin:15px;"><button onclick="showAllCategories()" style="padding:10px 20px;background:white;color:#0084ff;border:1px solid #0084ff;border-radius:10px;">← Retour à tous les articles</button></div>
+
+<div id="pop"><h3>🧸 Pop</h3><div class="products-grid" id="grid-pop" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:15px;"></div></div>
+<div id="jeuxvideo"><h3>🎮 Jeux Vidéo</h3><div class="products-grid" id="grid-jeuxvideo" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:15px;"></div></div>
+<div id="skylander"><h3>🌀 Skylanders</h3><div class="products-grid" id="grid-skylander" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:15px;"></div></div>
+<div id="livre"><h3>📚 Livres</h3><div class="products-grid" id="grid-livre" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:15px;"></div></div>
+<div id="film"><h3>🎬 Films</h3><div class="products-grid" id="grid-film" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:15px;"></div></div>
+<div id="decoration"><h3>🖼️ Décoration</h3><div class="products-grid" id="grid-decoration" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:15px;"></div></div>
+<div id="vaisselle"><h3>🍽️ Vaisselle</h3><div class="products-grid" id="grid-vaisselle" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:15px;"></div></div>
+<div id="bijoux"><h3>💍 Bijoux</h3><div class="products-grid" id="grid-bijoux" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:15px;"></div></div>
+<div id="jeux"><h3>🧩 Casse-tête et jeux</h3><div class="products-grid" id="grid-jeux" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:15px;"></div></div>
+<div id="peluche"><h3>🧸 Peluches</h3><div class="products-grid" id="grid-peluche" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:15px;"></div></div>
+<div id="vetement"><h3>👕 Vêtements</h3><div class="products-grid" id="grid-vetement" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:15px;"></div></div>
+<div id="maquillage"><h3>💄 Maquillage</h3><div class="products-grid" id="grid-maquillage" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:15px;"></div></div>
+<div id="lumiere"><h3>💡 Lumière</h3><div class="products-grid" id="grid-lumiere" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:15px;"></div></div>
+
+<div class="catalogue-drawer" style="max-width:450px;margin:40px auto;text-align:center;">
+<button class="catalogue-toggle" id="btnCatalogue" style="width:100%;padding:15px;background:#0084ff;color:white;border:none;border-radius:12px;font-weight:bold;">Explorer par catégorie ▼</button>
+<div class="catalogue-content" id="catContent" style="display:none;background:white;padding:15px;margin-top:10px;border-radius:12px;box-shadow:0 2px 10px rgba(0,0,0,0.1);">
+<button onclick="filterByCategory('pop')" style="margin:5px;">🧸 Pop</button>
+<button onclick="filterByCategory('jeuxvideo')" style="margin:5px;">🎮 Jeux Vidéo</button>
+<button onclick="filterByCategory('skylander')" style="margin:5px;">🌀 Skylanders</button>
+<button onclick="filterByCategory('livre')" style="margin:5px;">📚 Livres</button>
+<button onclick="filterByCategory('film')" style="margin:5px;">🎬 Films</button>
 </div>
 </div>
 </div></section>
 
-<button id="btnAdmin" style="position:fixed;bottom:20px;right:20px;width:60px;height:60px;border-radius:50%;background:rgba(0,0,0,0.4);color:white;border:none;font-size:28px;z-index:9999;">⚙️</button>
+<button id="btnAdmin" style="position:fixed;bottom:20px;right:20px;width:60px;height:60px;border-radius:50%;background:rgba(0,0,0,0.5);color:white;border:none;font-size:28px;z-index:9999;">⚙️</button>
 
 <div id="popupPin" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);z-index:10000;justify-content:center;align-items:center;">
 <div style="background:white;padding:30px;border-radius:20px;text-align:center;width:90%;max-width:320px;">
-<h3 style="color:#0084ff;">Admin</h3>
-<input type="password" id="inputPin" placeholder="PIN" style="width:100%;padding:12px;text-align:center;font-size:20px;border-radius:10px;border:1px solid #ddd;margin:15px 0;">
-<div style="display:flex;gap:10px;"><button id="btnEntrer" style="flex:1;padding:12px;background:#0084ff;color:white;border:none;border-radius:10px;">Entrer</button><button id="btnX" style="flex:1;padding:12px;background:white;color:#0084ff;border:1px solid #0084ff;border-radius:10px;">X</button></div>
+<h3 style="color:#0084ff;margin:0 0 10px;">Espace Admin</h3>
+<input type="password" id="inputPin" placeholder="PIN" style="width:100%;padding:12px;text-align:center;font-size:22px;border-radius:10px;border:1px solid #ddd;margin:15px 0;">
+<div style="display:flex;gap:10px;"><button id="btnEntrer" style="flex:1;padding:12px;background:#0084ff;color:white;border:none;border-radius:10px;font-weight:bold;">Entrer</button><button id="btnX" style="flex:1;padding:12px;background:white;color:#0084ff;border:1px solid #0084ff;border-radius:10px;">X</button></div>
+<p style="font-size:12px;color:#888;margin-top:10px;">PIN: 200511</p>
 </div>
 </div>
 
 <script>
-// ===== TOUT EST ICI, PLUS BESOIN DE SCRIPT.JS =====
-const IMGBB_KEY="cd9e9cede23ed44cd21cfd15dd2d8252"; const BIN_ID="6ac004c1ffd5d160534731b8"; const MASTER_KEY="$2a$10$Sd1xnH37QZJCb17iHe7tWuKaSPgVRMmoaigG3d2uCv/SlSyqEUWmW"; const ADMIN_PIN="200511";
+const IMGBB_KEY="cd9e9cede23ed44cd21cfd15dd2d8252";
+const BIN_ID="6ac004c1ffd5d160534731b8";
+const MASTER_KEY="$2a$10$Sd1xnH37QZJCb17iHe7tWuKaSPgVRMmoaigG3d2uCv/SlSyqEUWmW";
+const ADMIN_PIN="200511";
 const sectionsIds=['pop','jeuxvideo','skylander','livre','film','decoration','vaisselle','bijoux','jeux','peluche','vetement','maquillage','lumiere'];
 
-function toggleMenu(){ document.getElementById('navMenu').classList.toggle('active'); }
-function toggleCatalogue(){ var c=document.getElementById('catContent'); c.style.display = c.style.display==='none' || c.style.display==='' ? 'block' : 'none'; }
+function toggleMenu(){ var m=document.getElementById('navMenu'); m.classList.toggle('active'); }
+function toggleCatalogue(){ var c=document.getElementById('catContent'); c.style.display=(c.style.display==='none'||c.style.display==='')?'block':'none'; }
 function filterByCategory(cat){
     sectionsIds.forEach(id=>{ var s=document.getElementById(id); if(s) s.style.display='none'; });
     var sel=document.getElementById(cat); if(sel) sel.style.display='block';
     document.getElementById('category-back-button').style.display='block';
     document.getElementById('default-title').style.display='none';
-    window.scrollTo({top:sel.offsetTop-100, behavior:'smooth'});
+    window.scrollTo({top: document.getElementById('produits').offsetTop-80, behavior:'smooth'});
 }
 function showAllCategories(){
     sectionsIds.forEach(id=>{ var s=document.getElementById(id); if(s) s.style.display='block'; });
@@ -103,33 +126,116 @@ function verifierPin(){
         document.getElementById('admin').style.display='block';
         document.getElementById('popupPin').style.display='none';
         document.body.classList.add('admin-open');
-        alert("Admin ouvert ✅");
-    }else{ alert("PIN faux! Mets 200511"); }
+        document.getElementById('admin').scrollIntoView({behavior:'smooth'});
+    }else{ alert("PIN incorrect! C'est 200511"); document.getElementById('inputPin').value=""; }
 }
 function searchProducts(){
     var q=(document.getElementById('searchProduct').value||"").toLowerCase();
-    document.querySelectorAll('.product-card').forEach(c=>{
-        var n=c.textContent.toLowerCase(); c.style.display=n.includes(q)?"":"none";
+    document.querySelectorAll('.product-card').forEach(c=>{ c.style.display=c.textContent.toLowerCase().includes(q)?'':'none'; });
+}
+async function getProduits(){
+    try{
+        var r=await fetch("https://api.jsonbin.io/v3/b/"+BIN_ID+"/latest",{headers:{"X-Master-Key":MASTER_KEY}});
+        var j=await r.json();
+        var data=j.record?.produits||j.record||[];
+        return Array.isArray(data)?data:[];
+    }catch(e){ console.log(e); return []; }
+}
+async function saveProduits(prods){
+    await fetch("https://api.jsonbin.io/v3/b/"+BIN_ID,{
+        method:"PUT",
+        headers:{"X-Master-Key":MASTER_KEY,"Content-Type":"application/json"},
+        body: JSON.stringify({produits: prods})
     });
 }
-async function getProduits(){ try{ var r=await fetch("https://api.jsonbin.io/v3/b/"+BIN_ID+"/latest",{headers:{"X-Master-Key":MASTER_KEY}}); var j=await r.json(); return j.record?.produits||j.record||[]; }catch(e){ return []; } }
 async function chargerProduits(){
     var prods=await getProduits();
     document.querySelectorAll('.products-grid').forEach(g=>g.innerHTML="");
     prods.forEach(p=>{
-        var cat=(p.categorie||"").toLowerCase(); var tid="grid-decoration";
-        if(cat.includes("skylander")) tid="grid-skylander"; else if(cat.includes("pop")) tid="grid-pop"; else if(cat.includes("livre")) tid="grid-livre"; else if(cat.includes("jeuxvideo")) tid="grid-jeuxvideo";
-        var grid=document.getElementById(tid); if(grid) grid.innerHTML+=`<div class="product-card" style="background:white;border-radius:15px;padding:10px;margin:10px;box-shadow:0 2px 8px rgba(0,0,0,0.1)"><img src="${p.photo}" style="width:100%;height:200px;object-fit:cover;border-radius:10px"><h3>${p.nom}</h3><p>${p.description||""}</p><strong>${p.prix}$</strong></div>`;
+        var cat=(p.categorie||p.category||"").toLowerCase();
+        var tid="grid-decoration";
+        if(cat.includes("skylander")) tid="grid-skylander";
+        else if(cat.includes("pop")) tid="grid-pop";
+        else if(cat.includes("jeuxvideo")||cat.includes("jeu")) tid="grid-jeuxvideo";
+        else if(cat.includes("livre")) tid="grid-livre";
+        else if(cat.includes("film")) tid="grid-film";
+        else if(cat.includes("vaisselle")) tid="grid-vaisselle";
+        else if(cat.includes("bijou")) tid="grid-bijoux";
+        else if(cat.includes("peluche")) tid="grid-peluche";
+        else if(cat.includes("vetement")) tid="grid-vetement";
+        else if(cat.includes("maquillage")) tid="grid-maquillage";
+        else if(cat.includes("lumiere")) tid="grid-lumiere";
+        else if(cat.includes("decoration")||cat.includes("deco")) tid="grid-decoration";
+
+        var grid=document.getElementById(tid);
+        if(!grid) return;
+        var img = p.photo || p.image_url || "";
+        var nom = p.nom || p.name || "Sans nom";
+        var prix = p.prix || p.price || 0;
+        var desc = p.description || "";
+        grid.innerHTML+=`
+        <div class="product-card" style="background:white;border-radius:15px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+            <img src="${img}" style="width:100%;height:180px;object-fit:cover;" onerror="this.src='https://via.placeholder.com/200?text=No+Image'">
+            <div style="padding:10px;">
+                <h4 style="margin:5px 0;font-size:15px;">${nom}</h4>
+                <p style="font-size:13px;color:#666;margin:3px 0;">${desc}</p>
+                <p style="color:#0084ff;font-weight:bold;margin:5px 0;">${prix}$</p>
+                <button onclick="window.open('https://www.facebook.com/noemie.nadeau.705505','_blank')" style="width:100%;padding:8px;background:#0084ff;color:white;border:none;border-radius:8px;">Commander</button>
+            </div>
+        </div>`;
     });
 }
 
-// BOUTONS
+// Events
 document.getElementById('hamburgerBtn').addEventListener('click', toggleMenu);
 document.getElementById('btnCatalogue').addEventListener('click', toggleCatalogue);
-document.getElementById('btnAdmin').addEventListener('click', function(){ document.getElementById('popupPin').style.display='flex'; });
-document.getElementById('btnX').addEventListener('click', function(){ document.getElementById('popupPin').style.display='none'; });
+document.getElementById('btnAdmin').addEventListener('click', ()=>{ document.getElementById('popupPin').style.display='flex'; document.getElementById('inputPin').focus(); });
+document.getElementById('btnX').addEventListener('click', ()=>{ document.getElementById('popupPin').style.display='none'; });
 document.getElementById('btnEntrer').addEventListener('click', verifierPin);
+document.getElementById('inputPin').addEventListener('keydown', function(e){ if(e.key==='Enter') verifierPin(); });
+
+document.getElementById('imageProduit').addEventListener('change', function(){
+    var f=this.files[0]; if(f){
+        document.getElementById('preview-container').style.display='block';
+        document.getElementById('imagePreview').src=URL.createObjectURL(f);
+    }
+});
+
+document.getElementById('formAjoutProduit').addEventListener('submit', async function(e){
+    e.preventDefault();
+    var file=document.getElementById('imageProduit').files[0];
+    if(!file) return alert("Choisis une photo!");
+    var btn=document.getElementById('btnPublish');
+    btn.disabled=true; btn.innerText="⏳ Envoi en cours...";
+    try{
+        var fd=new FormData(); fd.append("image", file);
+        var r=await fetch("https://api.imgbb.com/1/upload?key="+IMGBB_KEY, {method:"POST", body:fd});
+        var j=await r.json();
+        if(!j.success) throw new Error("ImgBB erreur");
+        var url=j.data.display_url;
+        var all=await getProduits();
+        var nouveau={
+            id: Date.now(),
+            nom: document.getElementById('nomProduit').value.trim(),
+            description: document.getElementById('descProduit').value.trim(),
+            prix: document.getElementById('prixProduit').value.trim(),
+            photo: url,
+            categorie: document.getElementById('categorieProduit').value
+        };
+        await saveProduits([...all, nouveau]);
+        alert("Produit publié ✅");
+        this.reset();
+        document.getElementById('preview-container').style.display='none';
+        chargerProduits();
+        showAllCategories();
+    }catch(err){
+        alert("Erreur: "+err.message);
+    }finally{
+        btn.disabled=false; btn.innerText="🚀 Publier le produit";
+    }
+});
+
 chargerProduits();
 </script>
 </body>
-                                                                                                                                                                         </html>
+    </html>
